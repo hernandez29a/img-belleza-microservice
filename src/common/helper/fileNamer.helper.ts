@@ -13,6 +13,7 @@ export const fileNamer = (
   const fileExtension = file.mimetype.split('/')[1];
 
   const fileName = `${uuid()}.${fileExtension}`;
+  console.log(fileName);
 
   callback(null, fileName);
 };

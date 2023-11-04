@@ -1,7 +1,11 @@
-import { Controller, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ImgService } from './img.service';
-import { CreateImgDto } from './dto/create-img.dto';
 import { ImgMSG } from 'src/common/constants';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFilter, fileNamer } from 'src/common/helper';
@@ -13,27 +17,19 @@ export class ImgController {
 
   @MessagePattern(ImgMSG.GET_IMAGE)
   async getFle(@Payload() payload: any) {
-    console.log(payload);
     //return this.imgService.create(createImgDto);
     return 'retornar el url de la imagen';
   }
 
-  //@MessagePattern(ImgMSG.UPDATE)
-  /*@UseInterceptors(
-    FileInterceptor('image', {
-      //fileFilter: fileFilter,
-      //limits: { fileSize: 1000000 },
-      /*storage: diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, `./uploads/${req.params.coleccion}`);
-        },
-        filename: fileNamer,
-      }),
-    }),
-  )*/
-  async uploadUserFile(@Payload() payload: any) {
-    console.log(payload);
-    return 'la imagen se guardo entro del microservicio';
-    //return this.imgService.findAll();
+  @MessagePattern(ImgMSG.UPDATE)
+  async uploadFile(@Payload() payload: any) {
+    const datos = {
+      id: payload.id,
+      coleccion: payload.coleccion,
+      image: payload.image,
+    };
+    //console.log(data);
+    //return data;
+    return this.imgService.uploadFile(datos);
   }
 }

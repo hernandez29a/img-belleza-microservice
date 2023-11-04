@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { CreateImgDto } from './dto/create-img.dto';
-import { UpdateImgDto } from './dto/update-img.dto';
+import {
+  Injectable,
+  //BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from './entities/user.entitiy';
+import { Model } from 'mongoose';
+import { Product } from './entities/product.entity';
+import { fileNamer } from 'src/common/helper';
+import * as multer from 'multer';
+import { FileUpload } from 'src/common/interfaces/file-upload';
+import { uploadImgFile } from 'src/common/helper/upload-file';
 
 @Injectable()
 export class ImgService {
-  create(createImgDto: CreateImgDto) {
-    return 'This action adds a new img';
-  }
+  constructor(
+    // ? Patron Repositorio
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
+    @InjectModel(Product.name)
+    private readonly productModel: Model<Product>,
+  ) {}
+  async uploadFile(datos: any) {
+    const { id, coleccion, image } = datos;
+    const archivo = image as FileUpload;
+    const nombre = await uploadImgFile(archivo, coleccion);
+    console.log(nombre);
 
-  findAll() {
-    return `This action returns all img`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} img`;
-  }
-
-  update(id: number, updateImgDto: UpdateImgDto) {
-    return `This action updates a #${id} img`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} img`;
+    return { message: 'File uploaded successfully' };
   }
 }
