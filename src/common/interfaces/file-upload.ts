@@ -5,7 +5,10 @@ export interface FileUpload {
   originalname: string;
   encoding: number;
   mimetype: string;
-  buffer: string;
+  buffer: Buffer;
+  size: 0,
+  destination: '',
+  filename: '',
+  path: ''
   mv: Function;
 }
-

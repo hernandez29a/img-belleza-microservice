@@ -33,6 +33,7 @@ export const uploadImgFile = (
       nombreTemporal,
       );
     console.log(uploadPath);
+    // Subir la imagen al flesystem
     archivo.mv(uploadPath, (err: Error) => {
       if (err) {
         reject(err);
