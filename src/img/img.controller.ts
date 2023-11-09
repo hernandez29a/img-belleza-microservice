@@ -1,16 +1,10 @@
 /* eslint-disable prettier/prettier */
 import {
-  BadRequestException,
   Controller,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ImgService } from './img.service';
 import { ImgMSG } from 'src/common/constants';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { fileFilter, fileNamer } from 'src/common/helper';
-import { diskStorage } from 'multer';
 import { FileUpload } from 'src/common/interfaces/file-upload';
 
 @Controller()
@@ -18,9 +12,13 @@ export class ImgController {
   constructor(private readonly imgService: ImgService) {}
 
   @MessagePattern(ImgMSG.GET_IMAGE)
-  async getFle(@Payload() payload: any) {
+  async getImage(@Payload() payload: {imageName: string, coleccion: string}) {
+    //console.log(payload.coleccion, payload.imageName)
     //return this.imgService.create(createImgDto);
-    return 'retornar el url de la imagen';
+    //return 'retornar el url de la imagen';
+    const path = this.imgService.getStaticFile(payload.imageName, payload.coleccion);
+    //console.log(path);
+    return path;
   }
 
   @MessagePattern(ImgMSG.UPDATE)
